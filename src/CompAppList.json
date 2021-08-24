@@ -1,0 +1,40 @@
+[
+  {
+  "name": "Home",
+  "url": "Home"
+  },
+{
+  "name": "Beautify-json",
+  "url": "Beautifyjson",
+  "config": [
+    {
+      "type":"select",
+      "list":[
+      "json","html","css","js"
+      ]
+    }
+  ]
+},
+{
+  "name": "Beautify-json2",
+  "url": "Beautifyjson2"
+},
+
+{
+  "name": "Convert",
+  "url": "ConvertApp",
+  "func": "Beautify_json",
+  "defaultConfigs":{
+    "language":"json"
+  },
+  "configs": [
+    {
+      "name":"language",
+      "type":"select",
+      "list":[
+      "json","html","css","javascript"
+      ]
+    }
+  ]
+}
+]
