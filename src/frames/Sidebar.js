@@ -11,7 +11,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import AppList from "../CompAppList.json";
 import { Link } from "react-router-dom";
-import AutoComplete from './AutoComplate';
+import AutoComplete from '../components/AutoComplate';
 
 const drawerWidth = 300;
 const drawerTop = 80;
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   expender: {
     position : 'fixed',
     alignItems: 'center',
-    marginLeft: drawerWidth-theme.spacing(3),
+    //marginLeft: drawerWidth-theme.spacing(3),
     marginTop: '30vh',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   expenderClose: {
-    marginLeft: theme.spacing(4),
+    //marginLeft: theme.spacing(4),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -69,6 +69,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MiniDrawer(props) {
   const classes = useStyles();
+  let listClick = false;
   /*
   const handleDrawerOpen = () => {
     props.setSideBarExpend(true);
@@ -85,9 +86,16 @@ export default function MiniDrawer(props) {
     
     <AutoComplete appName={appName} />
     <div className={classes.root}
-    
-    onMouseOver={(event) =>{ props.setSideBarExpend(true)}}
-      onMouseOut={(event) => { props.setSideBarExpend(false)}}
+    onMouseOver={(event) =>{if(!props.sideBarFix)props.setSideBarExpend(true);}}
+    onMouseOut={(event) => {if(!props.sideBarFix)props.setSideBarExpend(false);}}
+    onClick={(event) =>{ 
+      if (!listClick){
+        props.setSideBarFix(!props.sideBarFix);
+        props.setSideBarExpend(!props.sideBarFix);
+        console.log('root');
+      }
+      listClick = false;
+    }}
     >
       <div
         className={clsx(classes.drawer, {
@@ -103,8 +111,12 @@ export default function MiniDrawer(props) {
       >
         
         <List>
-          {AppList.map((menu, index) => (
-            <ListItem button key={menu.name} component={Link} to={menu.name} onClick={props.setCurrAppName.bind(this,menu.name)}>
+          {props.appList.map((menu, index) => (
+            <ListItem button key={menu.name} component={Link} to={menu.url} onClick={(e)=>{
+              props.setCurrAppName(menu.name);
+              props.setSideBarFix.bind(this,false);
+              listClick = true;}
+            }>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={menu.name} />
             </ListItem>

@@ -2,7 +2,8 @@
   {
     "name": "Home",
     "url": "Home",
-    "defaultConfigs":{}
+    "defaultConfigs":{},
+    "configHolders":[]
   },
   {
     "name": "Beautify",
@@ -10,11 +11,11 @@
     "defaultConfigs": {
       "language": "json"
     },
-    "configs": [
+    "configHolders": [
       {
         "name": "language",
         "type": "select",
-        "list": [
+        "options": [
           "json",
           "html",
           "css",
@@ -27,22 +28,31 @@
     "name": "Formater",
     "url": "ConvertApp",
     "defaultConfigs": {
-      "language": "PlainText",
-      "Encode": true
+      "language": "plain",
+      "format":"base64",
+      "type": "encoder"
     },
-    "configs": [
+    "configHolders": [
       {
-        "name": "type",
+        "name": "format",
         "type": "select",
-        "list": [
+        "options": [
           "base64"
         ]
       },
       {
+        "name": "type",
         "type": "switch",
-        "name_false": "Encoder",
-        "name_true": "Decoder"
+        "name_false": "encoder",
+        "name_true": "decoder"
       }
     ]
+  },
+  {
+    "name": "CSVViewer",
+    "url": "ViewerApp",
+    "defaultConfigs": {
+      "language": "plain"
+    }
   }
 ]

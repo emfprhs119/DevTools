@@ -2,9 +2,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AceEditor from 'react-ace'
 import 'ace-builds/webpack-resolver'
 import React from 'react'
-import Appbar from './Appbar';
-import GetApp from '../usefulFunc/ioAppList';
-import { config } from 'ace-builds';
+import $ from "jquery";
+
 const useStyles = ((theme) => ({
   root: {
     display: 'flex',
@@ -12,7 +11,6 @@ const useStyles = ((theme) => ({
   },
   ace_wrapper:{
     flexGrow: 1,
-    marginTop:'90px',
     width: '100%',
     height: `calc(100vh - ${90}px)`, 
   },
@@ -24,72 +22,63 @@ const useStyles = ((theme) => ({
   }
 }));
 
-const sample = `{"apps" : [{"name":"Beautify-json","url":"Beautifyjson"}]}`;
-
 class MyComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.api = sessionStorage.getItem('api');
     this.aceViewRef = React.createRef();
     this.aceEditRef = React.createRef();
     this.onChange = this.onChange.bind(this);
-    this.setFunc = this.setFunc.bind(this);
-    this.setSample = this.setSample.bind(this);
-    this.setConfig = this.setConfig.bind(this);
     this.state = {
       func:((x)=>('App did not Loading !!!')),
       sample:null,
-      config:props.defaultConfigs
+      config:{language:'json'}
     };
-    
-    
   }
 
-  componentDidMount() {
-    /*import('../appFuncs/Beautify_json').then(data => 
-      this.setFunc((s)=>data.default(s)));
-      console.log(this.state.config);*/
-      this.setConfig(this.state.config);
-  }
-
-  
   onChange(newValue) {
-    const node = this.aceViewRef.current.editor;
-    const replaceValue = this.state.func(newValue);
-    node.setValue(replaceValue);
+    const view = this.aceViewRef.current.editor;
+    const str = Buffer.from(newValue, 'binary').toString('base64')
+    $.get(this.api,{type:'convert',uid:sessionStorage.getItem('uid'),str:str},(res)=>{
+      const processValue = Buffer.from(res.result, 'base64').toString('binary')
+      view.setValue(processValue);
+    })
   };
 
-  setFunc(newFunc){
-    this.setState({func:newFunc});
+  testSample(){
+    console.log('TestSample');
+    const edit = this.aceEditRef.current.editor;
+    $.get(sessionStorage.getItem('api'),{type:'sample',uid:sessionStorage.getItem('uid')},(res)=>{
+      const processValue = Buffer.from(res.result, 'base64').toString('binary')
+      edit.setValue(processValue);
+    })
   }
-  setSample(newSample){
-    this.setState({sample:newSample});
+  componentDidMount() {}
+  componentDidUpdate(prevProps,prevState){
+    if (this.props.sampleCall === true){
+      console.log(this.props.sampleCall)
+      this.testSample();
+      this.props.setSampleCall(false);
+      //this.props.setSampleCall(false);
+    }
+    if (JSON.stringify(prevProps.configs) !== JSON.stringify(this.props.configs)){
+      const newValue = this.aceEditRef.current.editor.getValue();
+      this.onChange(newValue); 
+    }  
   }
-  setConfig(newConfig){
-    import('../appFuncs/Beautify').then(data => 
-      this.setFunc((s)=>data[newConfig.language](s)));
-    this.setState({config:newConfig});
-  }
-
 
   render() {
     const { classes } = this.props;
+    const language = this.props.configs.language;
     return (<div className={classes.root}>
-      
-      <Appbar className={classes.appbar} 
-      setFunc={this.setFunc} 
-      setSample={this.setSample}
-      config={this.state.config}
-      setConfig={this.setConfig}
-
-      />
       <div className={classes.ace_wrapper}>
-        <AceEditor ref={this.aceEditRef}
+        <AceEditor 
+        ref={this.aceEditRef}
         onChange={this.onChange}
         className={classes.ace_editer}
-        mode={this.state.config.language}
+        mode={language?language:'text'}
         theme="tomorrow_night"
         fontSize={20}
-        value={sample}
         setOptions={{
         readOnly: false,
         tabSize: 4,
@@ -100,10 +89,9 @@ class MyComponent extends React.Component {
         <AceEditor
         ref={this.aceViewRef}
         className={classes.ace_editer}
-        mode={this.state.config.language}
+        mode={language?language:'text'}
         theme="tomorrow_night"
         fontSize={20}
-        //value={this.props.tryConvert(sample)}
         setOptions={{
         readOnly: true,
         }}/>
@@ -111,4 +99,5 @@ class MyComponent extends React.Component {
   </div>);
   }
 }
+
 export default withStyles(useStyles)(MyComponent);

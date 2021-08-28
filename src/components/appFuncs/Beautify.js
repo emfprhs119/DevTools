@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 function json(str){    
     try{
       const jsObj = JSON.parse(str);
@@ -9,8 +11,7 @@ function json(str){
   }
   function html(str){    
     try{
-      //const jsObj = JSON.parse(str);
-      return "html";
+      return "beautifyJS.Beautify_javascriptHTML(str)";
       }catch(e){
         return 'Wrong Json String !!!';
       }
@@ -18,8 +19,14 @@ function json(str){
   }
   function css(str){    
     try{
-      //const jsObj = JSON.parse(str);
-      return "css";
+      $.ajax({
+        url: 'http://localhost:3002/api',
+        method: 'GET',
+        success: function(response) {
+          console.log(response.greeting);
+          return response.greeting;
+        }
+      });
       }catch(e){
         return 'Wrong Json String !!!';
       }
@@ -27,12 +34,11 @@ function json(str){
   }
   function javascript(str){    
     try{
-      //const jsObj = JSON.parse(str);
-      return "javascript";
+      return "beautifyJS(str)";
       }catch(e){
         return 'Wrong Json String !!!';
       }
       
   }
-  export default (c)=>json(c);
+  //export default (c)=>json(c);
   export {json,html,css,javascript}
