@@ -1,13 +1,14 @@
 /* eslint-disable default-case */
-var JsonDB= require('../data/json-db');
-var Samples= require('../data/sample');
+//var JsonDB= require('../data/json-db');
+var Samples= require('./sample');
 const {Base64} = require('js-base64');
-var express = require('express');
-var router = express.Router();
-var Papa = require('Papaparse')
+//var express = require('express');
+//var router = express.Router();
+//var Papa = require('Papaparse')
 var beautify_js = require('js-beautify').js;
 var beautify_css = require('js-beautify').css;
 var beautify_html = require('js-beautify').html;
+var JsonDB = require('./dataStorage')
 
 const beautify_json = (str) => {
   if (str === '')
@@ -48,7 +49,8 @@ appFuncs['Formater'] = (str,config) => {
 
 const csvStringToArray = strData =>
 {
-  var results = Papa.parse(strData)
+  //var results = Papa.parse(strData)
+  const results = {data:'sorry'}
   return results.data;
 }
 
@@ -83,8 +85,6 @@ appSamples['Formater'] = (config) => {
 return result
 }
 
-
-
 appSamples['Viewer'] = (config) => {
   let result = 'Error !!!'
   console.log(config.format)
@@ -93,22 +93,8 @@ appSamples['Viewer'] = (config) => {
 }
 return result
 }
-/*
-JsonDB.setAppDefaultConfigs('Beautify',{"language":"json"});
-JsonDB.setConfigHolders('Beautify',
-  [{
-    "name": "language",
-    "type": "select",
-    "options": [
-      "json",
-      "html",
-      "css",
-      "javascript"
-    ]
-  }]
-);
-*/
 
+/*
 router.get('/', function(req, res) {
   const uid = req.query.uid;
   const reqType = req.query.type;
@@ -139,14 +125,12 @@ router.get('/', function(req, res) {
       resultStr = JSON.stringify(JsonDB.getAppInfo(appName));
       break;
   };
-
-  
-
   res.send({result:resultStr});
   res.end();
 });
+*/
 
-
+/*
 router.post('/',function(req, res) {
   const uid = req.body.uid;
   const appName = req.body.appName;
@@ -159,5 +143,54 @@ router.post('/',function(req, res) {
   }
   res.end();
 });
+*/
 
-module.exports = router;
+const get = (req, res) => {
+  console.log(req);
+    //const uid = (req.uid === undefined) ? req.uid : null;
+    //const reqType = (req.type === undefined) ? null : req.type;
+    console.log('[ ** get ** ]','['+req.uid+']','['+req.type+']');
+    //const base64str = (req.str === undefined) ? null : req.str;
+    const appName = JsonDB.getCurrAppName(req.uid);
+    const configs = JsonDB.getAppConfigs(req.uid);
+    let resultStr;
+    //console.log(JsonDB.getApps());
+    switch (req.type){
+      case 'convert':
+        const str = Base64.decode(req.str);
+        const convert = appFuncs[appName](str,configs);
+        resultStr = Base64.encode(convert);
+        break;
+      case 'sample':
+        const sample = appSamples[appName](configs);
+        resultStr = Base64.encode(sample);
+        break;
+      case 'configs':
+        resultStr = JSON.stringify(configs);
+        break;
+      case 'appList':
+        const apps = JsonDB.getApps();
+        resultStr = JSON.stringify(apps);
+        break;
+      case 'appInfo':
+        resultStr = JSON.stringify(JsonDB.getAppInfo(appName));
+        break;
+    };
+    res({result:resultStr});
+  };
+
+const post = (req,callback) => {
+    const uid = req.uid;
+  const appName = req.appName;
+  const appConfigs = req.appConfigs;
+  console.log('[ ** post ** ]',uid,appName,appConfigs)
+  if (appName){
+    JsonDB.setCurrAppName(uid,appName);
+  }else if (appConfigs){
+    JsonDB.setAppConfigs(uid,JSON.parse(appConfigs));
+  }
+  if (callback)
+    callback();
+}
+
+module.exports = {get,post}

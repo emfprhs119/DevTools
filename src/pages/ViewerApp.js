@@ -3,6 +3,7 @@ import AceEditor from 'react-ace'
 import 'ace-builds/webpack-resolver'
 import React from 'react'
 import SelectableTable from "../components/SelectableTable";
+import $ from "jquery";
 const useStyles = ((theme) => ({
   root: {
     display: 'flex',
@@ -54,7 +55,14 @@ class MyComponent extends React.Component {
     } 
     */ 
   }
-
+  testSample(){
+    console.log('TestSample');
+    const edit = this.aceEditRef.current.editor;
+    $.get(sessionStorage.getItem('api'),{type:'sample',uid:sessionStorage.getItem('uid')},(res)=>{
+      const processValue = Buffer.from(res.result, 'base64').toString('binary')
+      edit.setValue(processValue);
+    })
+  }
   render() {
     const { classes } = this.props;
     return (<div className={classes.root}>
@@ -72,7 +80,7 @@ class MyComponent extends React.Component {
   </div>
       
   <div className={classes.ace_wrapper}>
-        <SelectableTable rows={4} cols={6}/>
+        <SelectableTable rows={0} cols={0}/>
   </div>
   </div>);
   }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import $ from "jquery";
+import {get,post} from "./appData/Connector"
 //import reportWebVitals from './reportWebVitals';
 
 function makeid(length) {
@@ -16,21 +17,22 @@ charactersLength));
  return result;
 }
 const uid = makeid(16);
-sessionStorage.setItem('uid', uid);
-
-//$.post("http://localhost:3002/api/init", { uid: uid} );
-
+/** when using dist server
 sessionStorage.setItem('api', 'http://localhost:3002/api');
 $.post("http://localhost:3002/api", { uid: uid,appName: "Home"});
+*/
+sessionStorage.setItem('uid', uid);
+post({ uid: uid,appName: "Home"},null);
+
 if (window.location.href.split('/').pop() !== 'Home')
-  //console.log(window.location.href)
   window.location.href='Home';
-  ReactDOM.render(
-    <React.Fragment>
-      <App />
-    </React.Fragment>,
-    document.getElementById('root')
-  );
+
+ReactDOM.render(
+  <React.Fragment>
+    <App />
+  </React.Fragment>,
+  document.getElementById('root')
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

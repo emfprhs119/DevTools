@@ -1,15 +1,25 @@
 import $ from 'jquery'
 import '../css/SelectableTable.css';
 import React,{ useEffect } from 'react';
-import {setToClipboard} from './Tools/clipboard'
+import {setToClipboard} from '../Tools/clipboard'
+import Snackbar from '../Tools/snackbar'
 
-function GenerateTable(rows,cols){
+
+function GenerateTable(tableData){
   let tableElement = ''
-
+const rows = tableData.length;
+let maxCols = 0
+for(var i=0;i<rows;i++){
+    maxCols = (maxCols<tableData[i].length)?tableData[i].length:maxCols;
+}
+//let cols = tableData[0].length;
   for(var r=0;r<rows;r++){
     tableElement+='<tr>'
-    for(var c=0;c<cols;c++){
-      tableElement+='<td>1</td>'
+    let cols = tableData[r].length;
+    for(var c=0;c<maxCols;c++){
+      tableElement+='<td>'
+      if (c<cols) tableElement+=tableData[r][c];
+      tableElement+='</td>'
     }
     tableElement+='</tr>'
   }
@@ -18,7 +28,8 @@ function GenerateTable(rows,cols){
 
 export default function App(props) {
     // eslint-disable-next-line no-unused-vars
-    const [_, activate] = React.useState(false);
+    const [activate=false, setActivate] = React.useState();
+    const [open, setOpen] = React.useState(false);
     var table = $("#table");    
     var isMouseDown = false;
     var startRowIndex = null;
@@ -52,7 +63,9 @@ export default function App(props) {
             }        
         }
     }
-    
+    $(document).mousedown(function (e) {
+        table.find(".selected").removeClass("selected");
+    });
     table.find("td").mousedown(function (e) {
         isMouseDown = true;
         var cell = $(this);
@@ -80,8 +93,15 @@ export default function App(props) {
     
     $(document).mouseup(function () {
         isMouseDown = false;
-        //console.log("stop");
-        //getSelectedCells();
+        const data = getDataForClipboard();
+        if (data !== ''){
+            setToClipboard(navigator,data);
+            setOpen(true);
+            window.setTimeout(function(){
+                setOpen(false);
+            }, 2000);
+            //"클립보드에 저장되었습니다."
+        }
     });
     
     function getDataForClipboard(){
@@ -118,22 +138,27 @@ export default function App(props) {
         });
         
         // Document Ctrl + C/V 
+        /*
         $(document).keydown(function(e) {
             //console.log(data);
-            if (ctrlDown && (e.keyCode === cKey)) {
+            if (ctrlDown && (e.keyCode === cKey) && false) {
                 const data = getDataForClipboard();
                 setToClipboard(navigator,data);
             }
-            /*if (ctrlDown && (e.keyCode == vKey)) getFromClipboard(navigator);*/
+            //if (ctrlDown && (e.keyCode == vKey)) getFromClipboard(navigator);
         });
+        */
     });
     
-    useEffect(() => { /*console.log("component updated");*/ });
-
+    useEffect((prevProps,prevState) => {
+        setActivate(!activate)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        },[props.tableData]);
     return <div id='wrapper'>
-    <table id="table" onMouseOver={()=>activate()}
-    dangerouslySetInnerHTML={{__html:GenerateTable(props.rows,props.cols)}}>
+    <table id="table"
+    dangerouslySetInnerHTML={{__html:GenerateTable(props.tableData)}}>
   </table>
+  <Snackbar open={open} message='클립보드에 복사되었습니다.' />
   </div>
 }
  

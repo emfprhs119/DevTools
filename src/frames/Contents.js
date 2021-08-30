@@ -14,6 +14,7 @@ export default function DynamicGoto(props){
     loading={<div>Loading..</div>}
     props={{
       configs:props.configs,
+      viewType:props.viewType,
       sampleCall:props.sampleCall,
       setSampleCall:props.setSampleCall}
     }
