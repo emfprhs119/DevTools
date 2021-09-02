@@ -1,4 +1,5 @@
 /* eslint-disable default-case */
+/*
 var JsonDB= require('../data/json-db');
 var Samples= require('../data/sample');
 const {Base64} = require('js-base64');
@@ -93,7 +94,7 @@ appSamples['Viewer'] = (config) => {
 }
 return result
 }
-/*
+
 JsonDB.setAppDefaultConfigs('Beautify',{"language":"json"});
 JsonDB.setConfigHolders('Beautify',
   [{
@@ -107,7 +108,7 @@ JsonDB.setConfigHolders('Beautify',
     ]
   }]
 );
-*/
+
 
 router.get('/', function(req, res) {
   const uid = req.query.uid;
@@ -161,3 +162,4 @@ router.post('/',function(req, res) {
 });
 
 module.exports = router;
+*/

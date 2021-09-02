@@ -1,64 +1,66 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import SelectMenu from '../components/SelectMenu';
 import { makeStyles } from '@material-ui/core/styles';
-
-import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
+import { Hidden } from '@material-ui/core';
+
+function AddDivider(props){
+  if (props.visible === true)
+    return <Divider orientation="vertical" flexItem />
+  else
+    return <></>
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     position:'fixed',
+    //width:`calc(100vw - ${57}px)`,
+    width:'100vw',
     zIndex: 20,
-    right:'0vw',
-    textAlign:'right',
-    paddingTop:10
+    right:0,
+    height:45,
+    overflow:"Hidden",
   },
-  setting:{
-
-    //paddingRight:10,
-    margin: theme.spacing(1.5),
+  appbar:{
   },
-  sampleBtn:{
-    width : 120,
-    margin: theme.spacing(1.5),
-  }
+  appname:{
+    flexGrow:1,
+    margin: 10,
+  },
+  configHolder:{
+    display:"flex",
+    margin: theme.spacing(0.3),
+  },
   }));
 
-function GenerateConfigEle(props){
-  if (props.configEle.type === 'select')
-    return <SelectMenu 
-    name={props.configEle.name} 
-    configs={props.configs} 
-    setConfigs={props.setConfigs} 
-    options={props.configEle.options} />
-  else if (props.configEle.type === 'switch')
-    return <SelectMenu 
-    name={props.configEle.name} 
-    configs={props.configs} 
-    setConfigs={props.setConfigs} 
-    options={['encoder','decoder']} />
-}
+ 
 
 export default function Appbar(props) {
   const classes = useStyles();
   return (
-     <div className={classes.root}>
-      
-        <Toolbar>
-          
-          <div className={classes.setting}>
-          {props.configHolders.map((configEle,index)=>(
-            <GenerateConfigEle 
-            key={configEle.name}
-            configs={props.configs} 
-            setConfigs={props.setConfigs} 
-            configEle={configEle} />
+     <Box className={classes.root}>
+       <AppBar disableGutters={true} position="static" className={classes.appbar}>
+        <Toolbar disableGutters={true}  variant="dense">
+       <Typography variant="h5" className={classes.appname}>{props.currAppName}</Typography>
+          {props.configHolders.map((configHolder,index)=>(
+            <Fragment  key={index}>
+          <SelectMenu 
+              holder={configHolder}
+              configs={props.configs} 
+              setConfigs={props.setConfigs} />
+              <AddDivider visible={(props.configHolders.length-1)!==index}/>
+            </Fragment>
           ))}
-          </div>
-          <Divider orientation="vertical" flexItem />
-          <Button className={classes.sampleBtn} variant="outlined" size="large" onClick={()=>props.setSampleCall(true)}>Sample</Button>
-          
-        </Toolbar>
-      </div>
+          </Toolbar>
+          </AppBar>
+      </Box>
   );
 }
+//
+<Divider orientation="vertical" flexItem />
+//<Button className={classes.sampleBtn} variant="outlined" size="large" onClick={()=>props.setSampleCall(true)}>Sample</Button>
+          

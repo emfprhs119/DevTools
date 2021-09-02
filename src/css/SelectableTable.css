@@ -17,10 +17,10 @@ table td {
     overflow: hidden;
     border: 1px solid #999;
     width: 86px;
-    height: 28px;
+    height: 23px;
 }
 
 td.selected {
-    border-color:rgb(0, 4, 255);
-    background-color: rgba(5, 84, 255, 0.288);
+    border-color:rgb(76, 175, 80);
+    background-color: rgba(42, 98, 45, 0.5);
 }

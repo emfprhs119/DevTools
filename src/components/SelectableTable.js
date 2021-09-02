@@ -98,6 +98,7 @@ export default function App(props) {
             setToClipboard(navigator,data);
             setOpen(true);
             window.setTimeout(function(){
+                table.find(".selected").removeClass("selected");
                 setOpen(false);
             }, 2000);
             //"클립보드에 저장되었습니다."
@@ -125,12 +126,13 @@ export default function App(props) {
     }
 
     $(document).ready(function() {
+        /*
         let ctrlDown = false,
             ctrlKey = 17,
             cmdKey = 91,
-            //vKey = 86,
+            vKey = 86,
             cKey = 67;
-    
+        
         $(document).keydown(function(e) {
             if (e.keyCode === ctrlKey || e.keyCode === cmdKey) ctrlDown = true;
         }).keyup(function(e) {
@@ -138,7 +140,7 @@ export default function App(props) {
         });
         
         // Document Ctrl + C/V 
-        /*
+        
         $(document).keydown(function(e) {
             //console.log(data);
             if (ctrlDown && (e.keyCode === cKey) && false) {
@@ -154,7 +156,7 @@ export default function App(props) {
         setActivate(!activate)
         // eslint-disable-next-line react-hooks/exhaustive-deps
         },[props.tableData]);
-    return <div id='wrapper'>
+    return <div id='wrapper' style={{height:"100%",backgroundColor:'#1D1F21'}}>
     <table id="table"
     dangerouslySetInnerHTML={{__html:GenerateTable(props.tableData)}}>
   </table>

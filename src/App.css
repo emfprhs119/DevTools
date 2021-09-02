@@ -2,6 +2,9 @@
   display: flex;
 }
 
+.Box {
+  background-color: "primary.main";
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

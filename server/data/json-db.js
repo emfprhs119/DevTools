@@ -1,3 +1,4 @@
+/*
 var { JsonDB } = require('node-json-db');
 var { Config } = require('node-json-db/dist/lib/JsonDBConfig')
 var Apps = require('./AppList.json')
@@ -75,5 +76,5 @@ module.exports.getCurrAppName = function getCurrAppName(uid){
     const appName = Buffer.from(str64, 'base64').toString('binary');
     return appName;
 }
-
+*/
 //export {getSessionInfo,initSession}

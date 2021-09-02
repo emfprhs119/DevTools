@@ -1,14 +1,11 @@
 /* eslint-disable default-case */
-//var JsonDB= require('../data/json-db');
 var Samples= require('./sample');
 const {Base64} = require('js-base64');
-//var express = require('express');
-//var router = express.Router();
-//var Papa = require('Papaparse')
+var Papa = require('papaparse')
 var beautify_js = require('js-beautify').js;
 var beautify_css = require('js-beautify').css;
 var beautify_html = require('js-beautify').html;
-var JsonDB = require('./dataStorage')
+var dataStorage = require('./dataStorage')
 
 const beautify_json = (str) => {
   if (str === '')
@@ -39,18 +36,22 @@ appFuncs['Formater'] = (str,config) => {
     case 'base64':
       if (config.type === 'encoder')
         result = Base64.encode(str)
-      else
-        result = Base64.decode(str)
+      else{
+        try{
+          result = Base64.decode(str)
+        }catch{
+          result = 'InvalidCharacterError !!!'
+        }
+      }
       break;
   }
   return result
 }
 
 
-const csvStringToArray = strData =>
+const csvStringToArray = (strData) =>
 {
-  //var results = Papa.parse(strData)
-  const results = {data:'sorry'}
+  var results = Papa.parse(strData);
   return results.data;
 }
 
@@ -77,7 +78,6 @@ appSamples['Beautify'] = (config) => {
 };
 appSamples['Formater'] = (config) => {
   let result = 'Error !!!'
-  console.log(config.format+config.type)
   switch(config.format+config.type){
   case 'base64encoder':result = Samples.base64encode;break;
   case 'base64decoder':result = Samples.base64decode;break;
@@ -94,67 +94,12 @@ appSamples['Viewer'] = (config) => {
 return result
 }
 
-/*
-router.get('/', function(req, res) {
-  const uid = req.query.uid;
-  const reqType = req.query.type;
-  console.log('[ ** get ** ]','['+uid+']','['+reqType+']');
-  const base64str = req.query.str;
-  const appName = JsonDB.getCurrAppName(uid);
-  const configs = JsonDB.getAppConfigs(uid);
-  let resultStr;
-  //console.log(JsonDB.getApps());
-  switch (reqType){
-    case 'convert':
-      const str = Base64.decode(base64str);
-      const convert = appFuncs[appName](str,configs);
-      resultStr = Base64.encode(convert);
-      break;
-    case 'sample':
-      const sample = appSamples[appName](configs);
-      resultStr = Base64.encode(sample);
-      break;
-    case 'configs':
-      resultStr = JSON.stringify(configs);
-      break;
-    case 'appList':
-      const apps = JsonDB.getApps();
-      resultStr = JSON.stringify(apps);
-      break;
-    case 'appInfo':
-      resultStr = JSON.stringify(JsonDB.getAppInfo(appName));
-      break;
-  };
-  res.send({result:resultStr});
-  res.end();
-});
-*/
-
-/*
-router.post('/',function(req, res) {
-  const uid = req.body.uid;
-  const appName = req.body.appName;
-  const appConfigs = req.body.appConfigs;
-  console.log('[ ** post ** ]',uid,appName,appConfigs)
-  if (appName){
-    JsonDB.setCurrAppName(uid,appName);
-  }else if (appConfigs){
-    JsonDB.setAppConfigs(uid,JSON.parse(appConfigs));
-  }
-  res.end();
-});
-*/
 
 const get = (req, res) => {
-  console.log(req);
-    //const uid = (req.uid === undefined) ? req.uid : null;
-    //const reqType = (req.type === undefined) ? null : req.type;
     console.log('[ ** get ** ]','['+req.uid+']','['+req.type+']');
-    //const base64str = (req.str === undefined) ? null : req.str;
-    const appName = JsonDB.getCurrAppName(req.uid);
-    const configs = JsonDB.getAppConfigs(req.uid);
+    const appName = dataStorage.getCurrAppName(req.uid);
+    const configs = dataStorage.getAppConfigs(req.uid);
     let resultStr;
-    //console.log(JsonDB.getApps());
     switch (req.type){
       case 'convert':
         const str = Base64.decode(req.str);
@@ -169,11 +114,11 @@ const get = (req, res) => {
         resultStr = JSON.stringify(configs);
         break;
       case 'appList':
-        const apps = JsonDB.getApps();
+        const apps = dataStorage.getApps();
         resultStr = JSON.stringify(apps);
         break;
       case 'appInfo':
-        resultStr = JSON.stringify(JsonDB.getAppInfo(appName));
+        resultStr = JSON.stringify(dataStorage.getAppInfo(appName));
         break;
     };
     res({result:resultStr});
@@ -185,9 +130,9 @@ const post = (req,callback) => {
   const appConfigs = req.appConfigs;
   console.log('[ ** post ** ]',uid,appName,appConfigs)
   if (appName){
-    JsonDB.setCurrAppName(uid,appName);
+    dataStorage.setCurrAppName(uid,appName);
   }else if (appConfigs){
-    JsonDB.setAppConfigs(uid,JSON.parse(appConfigs));
+    dataStorage.setAppConfigs(uid,JSON.parse(appConfigs));
   }
   if (callback)
     callback();

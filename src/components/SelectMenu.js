@@ -3,14 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button  from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import Typography from '@material-ui/core/Typography';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import $ from 'jquery'
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display:'flex',
     //backgroundColor: theme.palette.background.paper,
     
+    marginLeft:10,
+    marginRight:10
   },
   menuitem : {
       width : 120,
@@ -25,7 +31,9 @@ export default function SimpleListMenu(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const options = props.options;
+  const name = props.holder.name;
+  const type = props.holder.type;
+  const options = props.holder.options;
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -33,7 +41,7 @@ export default function SimpleListMenu(props) {
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     const configs = $.extend({}, props.configs);
-    configs[props.name]=options[index];
+    configs[name]=options[index];
     props.setConfigs(configs);
     setAnchorEl(null);
   };
@@ -41,18 +49,22 @@ export default function SimpleListMenu(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  return (
+  const handleChange = (event) => {
+    console.log(selectedIndex)
+    handleMenuItemClick(null,event.target.value)
+    //setSelectedIndex(event.target.value);
+  };
+  if (type === 'select')
+    return (
     <div className={classes.root}>
-      <Typography className={classes.typo} variant="h6">{props.name} :</Typography>
       <Button className={classes.menuitem}
-        variant="outlined" size="large" 
+         variant="outlined" size="small"
         onClick={handleClickListItem}
       >
         {options[selectedIndex]}
       </Button>
 
-      <Menu
+      <Menu size="small" 
         id="lock-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -60,7 +72,7 @@ export default function SimpleListMenu(props) {
         onClose={handleClose}
       >
         {options.map((option, index) => (
-          <MenuItem className={classes.menuitem} 
+          <MenuItem className={classes.menuitem} size="small" 
             key={option}
             //disabled={index === 0}
             selected={index === selectedIndex}
@@ -72,4 +84,12 @@ export default function SimpleListMenu(props) {
       </Menu>
     </div>
   );
+  else if (type === 'toggle')
+          return <div className={classes.root}>
+          <RadioGroup row value={selectedIndex.toString()} onChange={(event)=>handleChange(event)}>
+          {options.map((option,index)=>(
+            <FormControlLabel value={(index).toString()} control={<Radio    color="default" />} label={option} />
+            ))}
+          </RadioGroup>
+        </div>
 }

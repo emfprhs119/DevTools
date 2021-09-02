@@ -6,15 +6,17 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import AppList from "../CompAppList.json";
 import { Link } from "react-router-dom";
-import AutoComplete from '../components/AutoComplate';
+import Box from '@material-ui/core/Box'
+//import AutoComplete from '../components/AutoComplate';
 
-const drawerWidth = 300;
-const drawerTop = 80;
+const drawerWidth = 200;
+const drawerWidthMin = 57;
+const drawerTop = 45;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 10,
     width: drawerWidth,
     flexShrink: 0,
-    height:`calc(100vh - ${drawerWidth}px)`,
+    height:`calc(100vh - ${drawerTop}px)`,
     whiteSpace: 'nowrap',
     top: drawerTop,
   },
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
+    width: drawerWidthMin,
   },
   expender: {
     position : 'fixed',
@@ -79,13 +81,9 @@ export default function MiniDrawer(props) {
     props.setSideBarExpend(false);
   };
   */
-  const appName = window.location.pathname.replace('/','');
   return (
     <>
-    <CssBaseline />
-    
-    <AutoComplete appName={appName} />
-    <div className={classes.root}
+    <Box className={classes.root}
     onMouseOver={(event) =>{if(!props.sideBarFix)props.setSideBarExpend(true);}}
     onMouseOut={(event) => {if(!props.sideBarFix)props.setSideBarExpend(false);}}
     onClick={(event) =>{ 
@@ -97,7 +95,7 @@ export default function MiniDrawer(props) {
       listClick = false;
     }}
     >
-      <div
+      <Box bgcolor='primary.main'
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: props.sideBarExpend,
           [classes.drawerClose]: !props.sideBarExpend,
@@ -112,19 +110,19 @@ export default function MiniDrawer(props) {
         
         <List>
           {props.appList.map((menu, index) => (
-            <ListItem button key={menu.name} component={Link} to={menu.url} onClick={(e)=>{
+            <ListItem  button key={menu.name} onClick={(e)=>{
               props.setCurrAppName(menu.name);
               props.setSideBarFix.bind(this,false);
               listClick = true;}
             }>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemIcon>{index % 2 === 0 ? <AcUnitIcon /> : <AcUnitIcon />}</ListItemIcon>
               <ListItemText primary={menu.name} />
             </ListItem>
           ))}
         </List>
         <Divider />
-      </div>
-    </div>
+      </Box>
+    </Box>
     </>
   );
 }

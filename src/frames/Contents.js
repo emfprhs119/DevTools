@@ -1,5 +1,6 @@
 import DynamicRoute from 'react-dynamic-route';
 import React from 'react';
+import ConvertApp from '../pages/ConvertApp';
 const useStyles = ((theme) => ({
   root: {
     position : 'fixed',
@@ -8,6 +9,12 @@ const useStyles = ((theme) => ({
 
 export default function DynamicGoto(props){
   const classes = useStyles();
+  return <ConvertApp 
+    configs={props.configs}
+      viewType={props.viewType}
+      sampleCall={props.sampleCall}
+      setSampleCall={props.setSampleCall} />
+  /*
     return <div className={classes.root}><DynamicRoute
     page={path => (
       import('../pages' + (path==='/'?'/Home':path))).then(module => module.default)}
@@ -29,4 +36,5 @@ export default function DynamicGoto(props){
       throw e
     }}
   /></div>
+  */
 };

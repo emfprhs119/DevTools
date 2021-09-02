@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import $ from "jquery";
-import {get,post} from "./appData/Connector"
+import {post} from "./appData/Connector"
 //import reportWebVitals from './reportWebVitals';
 
 function makeid(length) {
@@ -22,11 +21,11 @@ sessionStorage.setItem('api', 'http://localhost:3002/api');
 $.post("http://localhost:3002/api", { uid: uid,appName: "Home"});
 */
 sessionStorage.setItem('uid', uid);
-post({ uid: uid,appName: "Home"},null);
-
+//post({ uid: uid,appName: "Beautify"},null);
+/*
 if (window.location.href.split('/').pop() !== 'Home')
   window.location.href='Home';
-
+*/
 ReactDOM.render(
   <React.Fragment>
     <App />

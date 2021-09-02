@@ -1,11 +1,5 @@
 [
   {
-    "name": "Home",
-    "url": "Home",
-    "defaultConfigs":{},
-    "configHolders":[]
-  },
-  {
     "name": "Beautify",
     "url": "ConvertApp",
     "viewType":"editer",
@@ -43,9 +37,11 @@
       },
       {
         "name": "type",
-        "type": "switch",
-        "name_false": "encoder",
-        "name_true": "decoder"
+        "type": "toggle",
+        "options": [
+          "encoder",
+          "decoder"
+        ]
       }
     ]
   },
