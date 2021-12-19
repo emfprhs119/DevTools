@@ -1,6 +1,6 @@
 [
   {
-    "name": "Beautify",
+    "name": "Beautifier",
     "url": "ConvertApp",
     "viewType":"editer",
     "defaultConfigs": {
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "name": "Formater",
+    "name": "Formatter",
     "url": "ConvertApp",
     "viewType":"editer",
     "defaultConfigs": {

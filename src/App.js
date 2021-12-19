@@ -39,7 +39,7 @@ function App() {
   const classes = useStyles();
   const [sideBarExpend, setSideBarExpend] = React.useState(false);
   const [sideBarFix, setSideBarFix] = React.useState(false);
-  const [currAppName, setCurrAppName] = React.useState('Beautify');
+  const [currAppName, setCurrAppName] = React.useState('Beautifier');
   const [configs=[], setConfigs] = React.useState();
   const [appList=[], setAppList] = React.useState();
   const [appInfo={configHolders:[]}, setAppInfo] = React.useState();
@@ -121,6 +121,7 @@ function App() {
       setConfigs(appConfigs)
     });
     get({type:'appInfo',uid},(res)=>{
+      console.log(res.result)
       const appInfo = JSON.parse(res.result); 
       setAppInfo(appInfo)});
    },[currAppName]);

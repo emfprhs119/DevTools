@@ -20,7 +20,7 @@ const beautify_json = (str) => {
 
 const appFuncs = {};
 const appSamples = {};
-appFuncs['Beautify'] = (str,config) => {
+appFuncs['Beautifier'] = (str,config) => {
   let result = "Error !!!";
   switch(config.language){
     case 'json':result = beautify_json(str);break;
@@ -30,7 +30,7 @@ appFuncs['Beautify'] = (str,config) => {
   }
   return result;
 };
-appFuncs['Formater'] = (str,config) => {
+appFuncs['Formatter'] = (str,config) => {
   let result = "Error !!!";
   switch(config.format){
     case 'base64':
@@ -64,7 +64,7 @@ appFuncs['Viewer'] = (str,config) => {
 }
 
 
-appSamples['Beautify'] = (config) => {
+appSamples['Beautifier'] = (config) => {
   let result = "Error !!!";
   console.log(config)
   switch(config.language){
@@ -76,7 +76,7 @@ appSamples['Beautify'] = (config) => {
   }
   return result;
 };
-appSamples['Formater'] = (config) => {
+appSamples['Formatter'] = (config) => {
   let result = 'Error !!!'
   switch(config.format+config.type){
   case 'base64encoder':result = Samples.base64encode;break;

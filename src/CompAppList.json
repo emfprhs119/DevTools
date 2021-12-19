@@ -5,7 +5,7 @@
     "defaultConfigs":{}
   },
   {
-    "name": "Beautify",
+    "name": "Beautifier",
     "url": "ConvertApp",
     "defaultConfigs": {
       "language": "json"

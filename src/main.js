@@ -17,7 +17,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html')
-  if (false) {
+  if (true) {
     // 개발 중에는 개발 도구에서 호스팅하는 주소에서 로드
     mainWindow.loadURL('http://localhost:3000');
     mainWindow.webContents.openDevTools();
